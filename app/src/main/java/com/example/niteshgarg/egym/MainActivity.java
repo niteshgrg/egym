@@ -2,6 +2,7 @@ package com.example.niteshgarg.egym;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -30,20 +31,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        results = new ArrayList<com.example.niteshgarg.egym.model.results>();
 
         mListView = (ListView) findViewById(R.id.listview_users);
 
         adapter = new ListAdapter(getApplicationContext(), results);
         getUser();
         mListView.setAdapter(adapter);
-
-        setContentView(R.layout.activity_main);
     }
 
 
     private void getUser() {
 
         String API = "http://api.randomuser.me";
+        Log.e(LOG_TAG, "hello");
 
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(API).build();
         UserInterface userApi = restAdapter.create(UserInterface.class);
@@ -55,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 addUserList.get(getApplicationContext()).setResultsArrayList(userPOJO.getResults());
                 results = addUserList.get(getApplicationContext()).getResultsArrayList();
 
-                //Log.e(LOG_TAG, "username: " + results.get(0).getUser().getUsername());
+                Log.e(LOG_TAG, "username: " + results.get(0).getUser().getUsername());
 
                 adapter.updateContent(new ArrayList<com.example.niteshgarg.egym.model.results>(results));
                 adapter.notifyDataSetChanged();
