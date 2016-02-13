@@ -65,20 +65,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        adapter.notifyDataSetChanged();
+    }
+
+    public void onResume() {
+        super.onResume();
+
         if (isNetworkAvailable(getApplicationContext()) == true) {
             Toast.makeText(getApplicationContext(), "Loading Data", Toast.LENGTH_SHORT).show();
             getUser();
         } else {
             Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_LONG).show();
         }
-
-        adapter.notifyDataSetChanged();
     }
 
     private void getUser() {
 
         String API = "http://api.randomuser.me";
         Log.e(LOG_TAG, "hello");
+
+        results.clear();
 
         RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(API).build();
         UserInterface userApi = restAdapter.create(UserInterface.class);
