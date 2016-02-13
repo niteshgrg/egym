@@ -1,8 +1,12 @@
 package com.example.niteshgarg.egym;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,13 +23,11 @@ import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ListView mListView;
-    private int mPosition = ListView.INVALID_POSITION;
     private static final String SELECTED_KEY = "selected_position";
     private final String LOG_TAG = MainActivity.class.getSimpleName();
-
     ListAdapter adapter;
-
+    private ListView mListView;
+    private int mPosition = ListView.INVALID_POSITION;
     private  ArrayList<com.example.niteshgarg.egym.model.results> results;
 
     @Override
@@ -37,10 +39,24 @@ public class MainActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listview_users);
 
         adapter = new ListAdapter(getApplicationContext(), results);
-        getUser();
         mListView.setAdapter(adapter);
-    }
 
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="
+                        + results.get(i).getUser().getLocation().getCity());
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
+        getUser();
+
+        adapter.notifyDataSetChanged();
+    }
 
     private void getUser() {
 

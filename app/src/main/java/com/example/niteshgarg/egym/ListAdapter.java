@@ -1,6 +1,7 @@
 package com.example.niteshgarg.egym;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +18,10 @@ import java.util.ArrayList;
  */
 public class ListAdapter extends BaseAdapter {
 
-    public static class ViewHolder {
-        public ImageView iconView;
-        public TextView nameView;
-        public TextView phoneView;
-
-    }
-
+    private final String LOG_TAG = ListAdapter.class.getSimpleName();
+    ArrayList<com.example.niteshgarg.egym.model.results> results;
     private Context mContext;
     private LayoutInflater mInflater;
-
-
-    private final String LOG_TAG = ListAdapter.class.getSimpleName();
-
-    ArrayList<com.example.niteshgarg.egym.model.results> results;
 
     public ListAdapter(Context c, ArrayList<com.example.niteshgarg.egym.model.results> temp) {
         super();
@@ -80,9 +71,19 @@ public class ListAdapter extends BaseAdapter {
         }
 
         String url = results.get(position).getUser().getPicture().getThumbnail();
+
+        Log.e(LOG_TAG, "url: " + url);
+
         Picasso.with(mContext).load(url).fit().into(holder.iconView);
         holder.nameView.setText(results.get(position).getUser().getUsername());
         holder.phoneView.setText(results.get(position).getUser().getPhone());
         return vi;
+    }
+
+    public static class ViewHolder {
+        public ImageView iconView;
+        public TextView nameView;
+        public TextView phoneView;
+
     }
 }

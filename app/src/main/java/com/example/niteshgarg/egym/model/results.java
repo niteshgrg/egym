@@ -29,4 +29,5 @@ public class results {
         this.additionalProperties.put(name, value);
     }
 
+
 }
