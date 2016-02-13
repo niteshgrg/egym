@@ -1,6 +1,9 @@
 package com.example.niteshgarg.egym;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +33,14 @@ public class MainActivity extends AppCompatActivity {
     private int mPosition = ListView.INVALID_POSITION;
     private  ArrayList<com.example.niteshgarg.egym.model.results> results;
 
+    public static boolean isNetworkAvailable(Context c) {
+        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +64,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(mapIntent);
             }
         });
-        getUser();
+
+        if (isNetworkAvailable(getApplicationContext()) == true) {
+            Toast.makeText(getApplicationContext(), "Loading Data", Toast.LENGTH_SHORT).show();
+            getUser();
+        } else {
+            Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_LONG).show();
+        }
 
         adapter.notifyDataSetChanged();
     }
@@ -80,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void failure(RetrofitError error) {
-                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Failed to retrieve data", Toast.LENGTH_SHORT).show();
             }
         });
 
