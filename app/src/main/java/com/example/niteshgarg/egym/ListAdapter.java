@@ -1,7 +1,6 @@
 package com.example.niteshgarg.egym;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +71,7 @@ public class ListAdapter extends BaseAdapter {
 
         String url = results.get(position).getUser().getPicture().getThumbnail();
 
-        Log.e(LOG_TAG, "url: " + url);
+        //Log.e(LOG_TAG, "url: " + url);
 
         Picasso.with(mContext).load(url).fit().into(holder.iconView);
         holder.nameView.setText(results.get(position).getUser().getUsername());

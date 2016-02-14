@@ -2,12 +2,13 @@ package com.example.niteshgarg.egym;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String SELECTED_KEY = "selected_position";
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    View.OnClickListener mOnClickListener;
     ListAdapter adapter;
     private ListView mListView;
     private int mPosition = ListView.INVALID_POSITION;
@@ -65,7 +67,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        adapter.notifyDataSetChanged();
+        mOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onResume();
+                adapter.notifyDataSetChanged();
+            }
+        };
     }
 
     public void onResume() {
@@ -74,15 +82,19 @@ public class MainActivity extends AppCompatActivity {
         if (isNetworkAvailable(getApplicationContext()) == true) {
             Toast.makeText(getApplicationContext(), "Loading Data", Toast.LENGTH_SHORT).show();
             getUser();
+            adapter.notifyDataSetChanged();
         } else {
-            Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_LONG).show();
+            Snackbar.make(findViewById(android.R.id.content), "No internet connection Available", Snackbar.LENGTH_LONG)
+                    .setAction("Try Again", mOnClickListener)
+                    .setActionTextColor(Color.RED)
+                    .show();
         }
     }
 
     private void getUser() {
 
         String API = "http://api.randomuser.me";
-        Log.e(LOG_TAG, "hello");
+        //Log.e(LOG_TAG, "hello");
 
         results.clear();
 
@@ -95,11 +107,8 @@ public class MainActivity extends AppCompatActivity {
 
                 addUserList.get(getApplicationContext()).setResultsArrayList(userPOJO.getResults());
                 results = addUserList.get(getApplicationContext()).getResultsArrayList();
-
-                Log.e(LOG_TAG, "username: " + results.get(0).getUser().getUsername());
-
+                //Log.e(LOG_TAG, "username: " + results.get(0).getUser().getUsername());
                 adapter.updateContent(new ArrayList<com.example.niteshgarg.egym.model.results>(results));
-                adapter.notifyDataSetChanged();
             }
 
             public void failure(RetrofitError error) {
